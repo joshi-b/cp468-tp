@@ -83,7 +83,7 @@ def main():
             else:
                 room[-x][y] = "-"
         for i in room:
-            print('\n'
+            print('\n')
             for j in i:
                 print (j,end = "")
         for j in path:
