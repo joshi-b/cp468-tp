@@ -76,10 +76,13 @@ def main():
     for i in robot_locations:
         path = []
         robot_num+=1
-        print("Robot " + str(robot_num) + " at " + "(" + str(i[0]+1) + "," + str(i[1]+1) + ")" + " takes the path:")
         if room[i[0]][i[1]] == 1:
             print("Robot can not be at an obstacle")
+        elif room[goal[0]][goal[1]] == 1:
+            print("Rendezvous point is at an obstacle")
+            return
         else:
+            print("Robot " + str(robot_num) + " at " + "(" + str(i[0]+1) + "," + str(i[1]+1) + ")" + " takes the path:")
             path = a_search(room,i,goal)
             print(path)
         for j in path:
