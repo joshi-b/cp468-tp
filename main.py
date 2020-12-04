@@ -1,8 +1,9 @@
 from A_star_algorithm import a_search
 
 def main():
-    cols = 0
+    
     rows = 0
+    columns = 0
     num_of_robots = 0
     robot_locations = []
     room = []
@@ -20,8 +21,8 @@ def main():
                 line = i
             if k == 0:
                 values = line.split(" ")
+                columns = int(values[0])
                 rows = int(values[1])
-                cols = int(values[0])
             elif k == 1:
                 num_of_robots = int(line) + k
             elif k <= num_of_robots:
@@ -67,7 +68,9 @@ def main():
     else:
         print('not an option')
         return
+
     robot_num = 0
+
     print("Rendezvous Point: " + "(" + str(goal[0]+1) + "," + str(goal[1]+1) + ")")
     
     for i in robot_locations:
@@ -83,9 +86,9 @@ def main():
             x = j[0]-1
             y = j[1]-1
             if j == path[-1]:
-                room[x][y] = "!"
+                room[x][y] = "X"
             elif j == path[0]:
-                room[x][y] = "-"
+                room[x][y] = "^"
             else:
                 room[x][y] = "-"
         
