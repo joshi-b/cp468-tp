@@ -21,8 +21,8 @@ def main():
                 line = i
             if k == 0:
                 values = line.split(" ")
-                columns = int(values[0])
-                rows = int(values[1])
+                columns = int(values[1])
+                rows = int(values[0])
             elif k == 1:
                 num_of_robots = int(line) + k
             elif k <= num_of_robots:
@@ -48,12 +48,12 @@ def main():
             y = int(input("Enter the number of columns: "))
             num_of_robots = int(input("Enter the number of robots: "))
             for n in range(num_of_robots):
-                i = int(input("Enter the row that robot "+str(n+1)+" is in: "))-1
-                j = int(input("Enter the column that robot "+str(n+1)+" is in: "))-1
-                robot_locations.append((i,j))
-            goal_x = int(input("Enter the row of the rendezvous point: "))-1
-            goal_y = int(input("Enter the column of the rendezvous point: "))-1
-            goal = (goal_x,goal_y)
+                i = int(input("Enter the row that robot "+str(n+1)+" is in: "))
+                j = int(input("Enter the column that robot "+str(n+1)+" is in: "))
+                robot_locations.append((j,i))
+            goal_x = int(input("Enter the row of the rendezvous point: "))
+            goal_y = int(input("Enter the column of the rendezvous point: "))
+            goal = (goal_y,goal_x)
             for n in range(x):
                 temp = []
                 row = input("Enter row "+str(n+1)+":")
@@ -71,22 +71,30 @@ def main():
 
     robot_num = 0
 
-    print("\nRendezvous Point: " + "(" + str(goal[0]) + "," + str(goal[1]) + ")\n")
-
+    print("\nRendezvous Point: " + "(" + str(goal[1]) + "," + str(goal[0]) + ")")
+    
     for i in robot_locations:
         path = []
         robot_num+=1
 
 
+
         if room[i[0]][i[1]] == 1:
             print("Robot can not be at an obstacle")
+            path = [(i[1],i[0])]
         elif room[goal[0]][goal[1]] == 1:
             print("Rendezvous point is at an obstacle")
             return
         else:
             print("Robot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:")
             path = a_search(room,i,goal)
-            print(path, "\n")
+            
+        if path == []:
+            print("No path for the robot to take")
+            return
+
+        print(path)
+        print('\n')
 
         for j in path:
 
@@ -99,14 +107,16 @@ def main():
                 room[x][y] = "^"
             else:
                 room[x][y] = "-"
-        
-        for i in range(len(room)-1,-1,-1):
-            for j in room[i]:
+       
+        for k in range(len(room)-1,-1,-1):
+            for j in room[k]:
                 print (j,end = "")
             print('\n')
         for j in path:
+
             x = j[1]
             y = j[0]
+
             room[x][y] = 0
         print('\n')
 
