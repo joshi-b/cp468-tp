@@ -27,13 +27,13 @@ def main():
                 num_of_robots = int(line) + k
             elif k <= num_of_robots:
                 values = line.split(" ")
-                x = int(values[0])-1
-                y = int(values[1])-1
+                x = int(values[1])
+                y = int(values[0])
                 robot_locations.append((x,y))
             elif k == num_of_robots + 1:
                 values = line.split(" ")
-                x = int(values[0])-1
-                y = int(values[1])-1
+                x = int(values[1])
+                y = int(values[0])
                 goal = (x,y)
             else:
                 temp = []
@@ -71,23 +71,28 @@ def main():
 
     robot_num = 0
 
-    print("Rendezvous Point: " + "(" + str(goal[0]+1) + "," + str(goal[1]+1) + ")")
-    
+    print("\nRendezvous Point: " + "(" + str(goal[0]) + "," + str(goal[1]) + ")\n")
+
     for i in robot_locations:
         path = []
         robot_num+=1
+
+
         if room[i[0]][i[1]] == 1:
             print("Robot can not be at an obstacle")
         elif room[goal[0]][goal[1]] == 1:
             print("Rendezvous point is at an obstacle")
             return
         else:
-            print("Robot " + str(robot_num) + " at " + "(" + str(i[0]+1) + "," + str(i[1]+1) + ")" + " takes the path:")
+            print("Robot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:")
             path = a_search(room,i,goal)
-            print(path)
+            print(path, "\n")
+
         for j in path:
-            x = j[0]-1
-            y = j[1]-1
+
+            x = j[1]
+            y = j[0]
+
             if j == path[-1]:
                 room[x][y] = "X"
             elif j == path[0]:
@@ -100,8 +105,8 @@ def main():
                 print (j,end = "")
             print('\n')
         for j in path:
-            x = j[0]-1
-            y = j[1]-1
+            x = j[1]
+            y = j[0]
             room[x][y] = 0
         print('\n')
 

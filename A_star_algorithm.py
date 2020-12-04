@@ -48,7 +48,7 @@ def a_search(grid, start, goal):
      start = location(None, start)
      goal = location(None, goal)
      
-     path.append((start.location[0]+1,start.location[1]+1))
+     path.append((start.location[1],start.location[0]))
      opened.append(start)
 
      while len(opened) > 0:
@@ -102,5 +102,5 @@ def a_search(grid, start, goal):
             new_location.g_n = new_location.prev.g_n + 1
             new_location.h_n = heuristic(new_location, goal)
             new_location.f_n = new_location.g_n + new_location.h_n
-            path.append((new_location.location[0]+1, new_location.location[1]+1))
+            path.append((new_location.location[1], new_location.location[0]))
      return [x.location]
