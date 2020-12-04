@@ -1,8 +1,8 @@
 from A_star_algorithm import a_search
 
 def main():
-    cols = 0
     rows = 0
+    columns = 0
     num_of_robots = 0
     robot_locations = []
     room = []
@@ -20,8 +20,8 @@ def main():
                 line = i
             if k == 0:
                 values = line.split(" ")
-                rows = int(values[1])
-                cols = int(values[0])
+                columns = int(values[1])
+                rows = int(values[0])
             elif k == 1:
                 num_of_robots = int(line) + k
             elif k <= num_of_robots:
@@ -67,29 +67,40 @@ def main():
     else:
         print('not an option')
         return
-    robot_num = 0
+
     print("Rendezvous Point: " + "(" + str(goal[0]+1) + "," + str(goal[1]+1) + ")")
+
+    robot_num = 0
+
     for i in robot_locations:
         robot_num+=1
         path = a_search(room,i,goal)
         print("Robot " + str(robot_num) + " at " + "(" + str(i[0]+1) + "," + str(i[1]+1) + ")" + " takes the path:")
         print(path)
-        new_grid = room
+
+        new_grid = list(room)
+        grid_rows = rows - 1
+        grid_columns = columns - 1
+
         for j in path:
             x = j[0]
             y = j[1]
             if j == path[-1]:
-                room[-x][y] = "!"
+                new_grid[grid_rows-y][x] = "X"
+            elif j == path[0]:
+                new_grid[grid_rows-y][x] = "^"
             else:
-                room[-x][y] = "-"
-        for i in room:
+                new_grid[grid_rows-y][x] = "-"
+        for k in new_grid:
             print('\n')
-            for j in i:
+            for j in k:
                 print (j,end = "")
+      
         for j in path:
             x = j[0]
             y = j[1]
-            room[-x][y] = 0
+            room[grid_rows-y][x] = 0
         print('\n')
+
 
 main()
