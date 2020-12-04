@@ -38,7 +38,7 @@ class location():
         return open_space
 
 
-#calculate the h value - gets the distance between the gaol and current location
+#calculate the h value - gets the distance between the goal and current location
 def heuristic(neighbor, goal):
     distance = math.sqrt(((goal.location[0]-neighbor.location[0])**2)+((goal.location[1]-neighbor.location[1])**2))
     return distance;
@@ -62,6 +62,7 @@ def a_search(grid, start, goal):
         avail_moves = x.gen_avail_moves(grid, goal)
         if avail_moves == [] or (len(avail_moves) == 1 and x.prev!= None and avail_moves[0] == x.prev.location):
             x = x.prev
+            path.pop(-1)
             if closed == []:
                 return []
             opened.append(x)
