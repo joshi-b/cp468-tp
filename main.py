@@ -1,8 +1,8 @@
 from A_star_algorithm import a_search
 
 def main():
+    cols = 0
     rows = 0
-    columns = 0
     num_of_robots = 0
     robot_locations = []
     room = []
@@ -20,8 +20,8 @@ def main():
                 line = i
             if k == 0:
                 values = line.split(" ")
-                columns = int(values[1])
-                rows = int(values[0])
+                rows = int(values[1])
+                cols = int(values[0])
             elif k == 1:
                 num_of_robots = int(line) + k
             elif k <= num_of_robots:
@@ -39,7 +39,7 @@ def main():
                 for j in line:
                     if j != '\n':
                         temp.append(int(j))
-                room.append(temp)
+                room.insert(0,temp)
             k += 1
     elif input_type == "data":
         try:
@@ -58,7 +58,7 @@ def main():
                 row = input("Enter row "+str(n+1)+":")
                 for m in row:
                     temp.append(int(m))
-                room.append(temp)
+                room.insert(0,temp)
             print('\n')
             print('\n')
         except:
@@ -67,40 +67,36 @@ def main():
     else:
         print('not an option')
         return
-
-    print("Rendezvous Point: " + "(" + str(goal[0]+1) + "," + str(goal[1]+1) + ")")
-
     robot_num = 0
-
+    print("Rendezvous Point: " + "(" + str(goal[0]+1) + "," + str(goal[1]+1) + ")")
+    
     for i in robot_locations:
+        path = []
         robot_num+=1
-        path = a_search(room,i,goal)
         print("Robot " + str(robot_num) + " at " + "(" + str(i[0]+1) + "," + str(i[1]+1) + ")" + " takes the path:")
-        print(path)
-
-        new_grid = list(room)
-        grid_rows = rows - 1
-        grid_columns = columns - 1
-
+        if room[i[0]][i[1]] == 1:
+            print("Robot can not be at an obstacle")
+        else:
+            path = a_search(room,i,goal)
+            print(path)
         for j in path:
-            x = j[0]
-            y = j[1]
+            x = j[0]-1
+            y = j[1]-1
             if j == path[-1]:
-                new_grid[grid_rows-y][x] = "X"
+                room[x][y] = "!"
             elif j == path[0]:
-                new_grid[grid_rows-y][x] = "^"
+                room[x][y] = "-"
             else:
-                new_grid[grid_rows-y][x] = "-"
-        for k in new_grid:
-            print('\n')
-            for j in k:
+                room[x][y] = "-"
+        
+        for i in range(len(room)-1,-1,-1):
+            for j in room[i]:
                 print (j,end = "")
-      
+            print('\n')
         for j in path:
-            x = j[0]
-            y = j[1]
-            room[grid_rows-y][x] = 0
+            x = j[0]-1
+            y = j[1]-1
+            room[x][y] = 0
         print('\n')
-
 
 main()
