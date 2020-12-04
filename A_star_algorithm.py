@@ -35,8 +35,6 @@ class location():
                 for c in closed:
                     if c.location == s:
                         blocked.append((row,column))
-        print(self.location)
-        print(open_space)
         return open_space
 
 
@@ -60,17 +58,14 @@ def a_search(grid, start, goal):
                 return path
             else:
                 return [x]
-        closed.append(x)
+        
         avail_moves = x.gen_avail_moves(grid, goal)
         if avail_moves == [] or (len(avail_moves) == 1 and x.prev!= None and avail_moves[0] == x.prev.location):
-            print("backtrack")
-            closed.remove(x)
             x = x.prev
             if closed == []:
                 return []
             opened.append(x)
             closed.remove(x)
-            print(x.location)
             continue
             
         at_open = -1
@@ -85,8 +80,8 @@ def a_search(grid, start, goal):
                 if c.location == shift:
                     in_close = True
                     continue
-            if in_close == False:
-                h.append([heuristic(location(x,shift), goal),shift])
+            h.append([heuristic(location(x,shift), goal),shift])
+        closed.append(x)
         min = 100
         next = []
         for heur_val in h:
