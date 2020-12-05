@@ -2,10 +2,8 @@
 import math
 
 # initialize arrays to hold blocked, open and closed coordinates(positions)
-blocked = []
 opened = []
 closed = []
-
 
 class location():
 
@@ -33,7 +31,7 @@ class location():
         self.g_n = 0
         self.h_n = 0
 
-    def gen_avail_moves(self, grid, goal):
+    def gen_avail_moves(self, grid, goal, blocked):
         """
         --------------------------------------------------------------
         Determines open spaces available around current position
@@ -50,7 +48,6 @@ class location():
         """ 
         # initialize array to hold available moves (open spaces)
         open_space = []
-
         # get coordinates of current positon
         row = self.location[0]
         column = self.location[1]
@@ -88,9 +85,8 @@ class location():
                 for c in closed:
                     if c.location == s:
                         blocked.append((row,column))
-
         # return available open spaces for current position
-        return open_space
+        return open_space,blocked
 
 
 #calculate the h value - gets the distance between the goal and current location
@@ -98,15 +94,16 @@ def heuristic(neighbor, goal):
     distance = math.sqrt(((goal.location[0]-neighbor.location[0])**2)+((goal.location[1]-neighbor.location[1])**2))
     return distance
 
-def a_search(grid, start, goal):
+def a_search(grid, start, point, one_opening):
 
     # initialize array to hold the robot's path
      path = []
+     blocks = []
 
      # initialize location of start position and rendezvous point
      start = location(None, start)
-     goal = location(None, goal)
-     
+     goal = location(None, point)
+         
      # add start position to path and opened array
      path.append((start.location[1],start.location[0]))
      opened.append(start)
@@ -126,8 +123,8 @@ def a_search(grid, start, goal):
                 return [x]
         
         # determine available moves for current position
-        avail_moves = x.gen_avail_moves(grid, goal)
-        
+        avail_moves, new_block = x.gen_avail_moves(grid, goal, blocks)
+        blocks.append(new_block)
         if avail_moves == [] or (len(avail_moves) == 1 and x.prev!= None and avail_moves[0] == x.prev.location):
             x = x.prev
             path.pop(-1)
@@ -155,9 +152,15 @@ def a_search(grid, start, goal):
                     in_close = True
                     continue
             # calculate the h value for the available move
+            for o in range(len(one_opening)-1,-1,-1):
+                if shift[1] < one_opening[o]:
+                    goal.location = ((len(grid)-one_opening[o])-1,grid[(len(grid)-one_opening[o])].index(0))
+                    print(shift, goal.location)
+                    break
+                else:
+                    goal.location = (point[0],point[1])
             h.append([heuristic(location(x,shift), goal),shift])
         closed.append(x)
-
         # determine which available move is the best option
         min = 100000000000000000000000000000000000000000000
         next = []
