@@ -64,7 +64,7 @@ def main():
                         count+=1
                 room.insert(0,temp_row)
                 if count == 1:
-                    one_opening.append(line_number-robot_numbers-3)
+                    one_opening.append(line_number-robot_numbers-2)
             # increment line number of file
             line_number += 1
 
