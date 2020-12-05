@@ -125,7 +125,6 @@ def main():
         # if path output empty, let user know
         if path == []:
             print("No path for the robot to take")
-            return
 
         # print out the path output for the robot
         print(path)
