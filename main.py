@@ -1,7 +1,7 @@
 from A_star_algorithm import a_search
 
 def main():
-    
+
     # initialize variables to hold room dimensions and an array to hold room details
     rows = 0
     columns = 0
@@ -90,7 +90,7 @@ def main():
         except:
             print('incorrect input')
             return
-    # if input type not valid, tell user 
+    # if input type not valid, tell user
     else:
         print('not an option')
         return
@@ -100,7 +100,7 @@ def main():
 
     # print out rendezvous point of this room
     print("\nRendezvous Point: " + "(" + str(goal[1]) + "," + str(goal[0]) + ")")
-    
+
     # for each robot, determine it's path and output it
     for i in robots_start:
 
@@ -122,7 +122,7 @@ def main():
             # perform a star search algorithm to determine robot's path
             path = a_search(room,i,goal)
 
-        # if path output empty, let user know  
+        # if path output empty, let user know
         if path == []:
             print("No path for the robot to take")
             return
@@ -147,7 +147,7 @@ def main():
             # for any other steps in the path, change its output to -
             else:
                 room[x][y] = "-"
-       
+
         # loop through each row of the room and output it with the changes made above for clear visual of robot's path
         for k in range(len(room)-1,-1,-1):
             for j in room[k]:
