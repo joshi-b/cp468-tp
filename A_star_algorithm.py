@@ -95,7 +95,7 @@ def heuristic(neighbor, goal):
     return distance
 
 def a_search(grid, start, point, one_opening):
-
+    
     # initialize array to hold the robot's path
      path = []
      blocks = []
@@ -153,11 +153,10 @@ def a_search(grid, start, point, one_opening):
                     continue
             # calculate the h value for the available move
             for o in range(len(one_opening)-1,-1,-1):
-                if shift[1] < len(grid)-one_opening[o]:
-                    goal.location = ((len(grid)-one_opening[o]),grid[(len(grid)-one_opening[o])].index(0))
+                if shift[0] <= (len(grid)-one_opening[o]):
+                    goal.location = ((len(grid)-one_opening[o]),grid[(len(grid)-one_opening[o])-1].index(0))
                     break
                 else:
-                    print(x.location)
                     goal.location = (point[0],point[1])
             h.append([heuristic(location(x,shift), goal),shift])
         closed.append(x)
