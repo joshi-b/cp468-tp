@@ -116,7 +116,7 @@ def a_search(grid, start, point, one_opening):
         x = opened.pop(0)
 
         # if current position is rendezvous point, return path of the robot
-        if(x.location == goal.location):
+        if(x.location == point):
             if len(closed) > 0:
                 return path
             else:
@@ -153,11 +153,11 @@ def a_search(grid, start, point, one_opening):
                     continue
             # calculate the h value for the available move
             for o in range(len(one_opening)-1,-1,-1):
-                if shift[1] < one_opening[o]:
-                    goal.location = ((len(grid)-one_opening[o])-1,grid[(len(grid)-one_opening[o])].index(0))
-                    print(shift, goal.location)
+                if shift[1] < len(grid)-one_opening[o]:
+                    goal.location = ((len(grid)-one_opening[o]),grid[(len(grid)-one_opening[o])].index(0))
                     break
                 else:
+                    print(x.location)
                     goal.location = (point[0],point[1])
             h.append([heuristic(location(x,shift), goal),shift])
         closed.append(x)
