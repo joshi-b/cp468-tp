@@ -10,6 +10,7 @@ def main():
     # initialize variables to hold number of robots, robot start locations and rendezvous point
     robot_numbers = 0
     robots_start = []
+    one_opening = []
     goal = (0,0)
 
     file = ''
@@ -55,10 +56,15 @@ def main():
             # if at a room details line, extract each character in line and save in a temp array, then add temp array to room details array
             else:
                 temp_row = []
+                count = 0
                 for character in line:
                     if character != '\n':
                         temp_row.append(int(character))
+                    if character!='\n' and int(character) == 0:
+                        count+=1
                 room.insert(0,temp_row)
+                if count == 1:
+                    one_opening.append(line_number-robot_numbers-3)
             # increment line number of file
             line_number += 1
 
@@ -82,9 +88,14 @@ def main():
             for n in range(x):
                 temp = []
                 row = input("Enter row "+str(n+1)+":")
+                count=0
                 for m in row:
                     temp.append(int(m))
+                    if m == 0:
+                        count+=1
                 room.insert(0,temp)
+                if count == 1:
+                    one_opening.append(n)
             print('\n')
             print('\n')
         except:
@@ -120,11 +131,12 @@ def main():
         else:
             print("Robot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:")
             # perform a star search algorithm to determine robot's path
-            path = a_search(room,i,goal)
+            path = a_search(room,i,goal,one_opening)
 
         # if path output empty, let user know
         if path == []:
             print("No path for the robot to take")
+            continue
 
         # print out the path output for the robot
         print(path)
