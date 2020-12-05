@@ -56,13 +56,13 @@ class location():
         column = self.location[1]
 
         # check if move down is possible
-        if row-1 > 0 :
+        if row-1 >= 0 :
             # if neighbour position is not an obstacle, add to available spaces array
             if grid[row-1][column] == 0 and (row - 1, column) not in blocked:
                 open_space.append((row - 1, column))
 
         # check if move left is possible
-        if column-1 > 0 :
+        if column-1 >= 0 :
             # if neighbour position is not an obstacle, add to available spaces array
             if grid[row][column-1] == 0 and (row, column-1) not in blocked:
                 open_space.append((row, column - 1))
