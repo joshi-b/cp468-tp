@@ -139,18 +139,26 @@ def a_search(grid, start, goal):
             
         at_open = -1
         h = []
+
+        # loop through all available moves
         for shift in avail_moves:
             at_open = -1
             in_close = False
+
+            # determine if an available move is in the opened array
             for o in opened:
                 if o.location == shift:
                     at_open = opened.index(shift)
+            # determine if an available move is in the closed array
             for c in closed:
                 if c.location == shift:
                     in_close = True
                     continue
+            # calculate the h value for the available move
             h.append([heuristic(location(x,shift), goal),shift])
         closed.append(x)
+
+        # determine which available move is the best option
         min = 100
         next = []
         for heur_val in h:
@@ -165,6 +173,8 @@ def a_search(grid, start, goal):
                     if (goal.location[1] - heur_val[0][1]) < (goal.location[1] - next[1]):
                         next = heur_val[1]
         new_location = location(x,next)
+
+        # calculate the g, h and f values for this position
         if at_open == -1:
             opened.append(new_location)
             c = opened[at_open]
