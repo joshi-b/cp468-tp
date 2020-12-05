@@ -159,7 +159,7 @@ def a_search(grid, start, goal):
         closed.append(x)
 
         # determine which available move is the best option
-        min = 100
+        min = 100000000000000000000000000000000000000000000
         next = []
         for heur_val in h:
             if heur_val[0] < min:
