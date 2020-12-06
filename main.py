@@ -77,13 +77,13 @@ def main():
             robot_numbers = int(input("Enter the number of robots: "))
             # for each robot, prompt user for robot's start coordinates and add to robot start locations array
             for n in range(robot_numbers):
-                i = int(input("Enter the row that robot "+str(n+1)+" is in: "))
                 j = int(input("Enter the column that robot "+str(n+1)+" is in: "))
-                robots_start.append((j,i))
+                i = int(input("Enter the row that robot "+str(n+1)+" is in: "))
+                robots_start.append((i,j))
             # prompt user for rendezvous coordinates
-            goal_x = int(input("Enter the row of the rendezvous point: "))
             goal_y = int(input("Enter the column of the rendezvous point: "))
-            goal = (goal_y,goal_x)
+            goal_x = int(input("Enter the row of the rendezvous point: "))
+            goal = (goal_x,goal_y)
             # prompt user for room details per row
             for n in range(x):
                 temp = []
