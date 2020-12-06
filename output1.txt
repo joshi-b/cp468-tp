@@ -1,0 +1,9 @@
+Rendezvous Point: (29,29)
+Robot 1 at (7,1) takes the path:
+No path for the robot to take
+Robot 2 at (10,10) takes the path:
+No path for the robot to take
+Robot 3 at (19,10) takes the path:
+No path for the robot to take
+Robot 4 at (10,1) takes the path:
+No path for the robot to take
