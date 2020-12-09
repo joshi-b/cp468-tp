@@ -4,6 +4,7 @@ import math
 # initialize arrays to hold blocked, open and closed coordinates(positions)
 opened = []
 closed = []
+r_path = []
 
 class location():
 
@@ -99,6 +100,7 @@ def a_search(grid, start, point, one_opening):
     # initialize array to hold the robot's path
      path = []
      blocks = []
+     i=0
 
      # initialize location of start position and rendezvous point
      start = location(None, start)
@@ -118,9 +120,11 @@ def a_search(grid, start, point, one_opening):
         # if current position is rendezvous point, return path of the robot
         if(x.location == point):
             if len(closed) > 0:
-                return path
+                r_path.append(path)
+                return path, r_path
             else:
-                return [x]
+                r_path.append(path)
+                return [x], r_path
         
         # determine available moves for current position
         avail_moves, new_block = x.gen_avail_moves(grid, goal, blocks)
@@ -129,10 +133,25 @@ def a_search(grid, start, point, one_opening):
             x = x.prev
             path.pop(-1)
             if closed == []:
-                return []
+                return [], r_path
             opened.append(x)
             closed.remove(x)
             continue
+        else:
+            for p in r_path:
+                if p!=[] and i < len(p):
+                    if p[i] in avail_moves and p[i]!=(point[0],point[1]):
+                         avail_moves.pop(avail_moves.index(p[i]))
+            if avail_moves == []:
+                new_location = location(x,x)
+                opened.append(new_location)
+                c = opened[at_open]
+                new_location.g_n = new_location.prev.g_n + 1
+                new_location.h_n = heuristic(new_location, goal)
+                new_location.f_n = new_location.g_n + new_location.h_n
+                path.append((new_location.location[1], new_location.location[0]))
+                i+=1
+                continue
             
         at_open = -1
         h = []
@@ -184,4 +203,6 @@ def a_search(grid, start, point, one_opening):
             new_location.h_n = heuristic(new_location, goal)
             new_location.f_n = new_location.g_n + new_location.h_n
             path.append((new_location.location[1], new_location.location[0]))
-     return [x.location]
+            i+=1
+     r_path.append(path)
+     return [x.location], r_path
