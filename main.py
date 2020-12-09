@@ -1,4 +1,7 @@
 from A_star_algorithm import a_search
+import pygame
+
+pygame.init()
 
 def main():
 
@@ -108,7 +111,9 @@ def main():
 
     # initialize a variable to hold which robot's path we are determining
     robot_num = 0
-
+    screen = pygame.display.set_mode((1000,1000),0,32)
+    pygame.display.set_caption('Path_Planning Group 4')
+    game_over = False
     # print out rendezvous point of this room
     print("\nRendezvous Point: " + "(" + str(goal[1]) + "," + str(goal[0]) + ")")
 
@@ -131,7 +136,7 @@ def main():
         else:
             print("Robot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:")
             # perform a star search algorithm to determine robot's path
-            path = a_search(room,i,goal,one_opening)
+            path, r_path = a_search(room,i,goal,one_opening)
 
         # if path output empty, let user know
         if path == []:
@@ -141,37 +146,33 @@ def main():
         # print out the path output for the robot
         print(path)
         print('\n')
-
-        # loop through each coordinate of the path and change it's output for clear visual
-        for j in path:
-
-            # determine coordinates
-            x = j[1]
-            y = j[0]
-
-            # if coordinates are the last step of the path (meaning the rendezvous point), change its output to X
-            if j == path[-1]:
-                room[x][y] = "X"
-            # if coordinates are the first step of the path (meaning the start position), change its output to ^
-            elif j == path[0]:
-                room[x][y] = "^"
-            # for any other steps in the path, change its output to -
-            else:
-                room[x][y] = "-"
-
-        # loop through each row of the room and output it with the changes made above for clear visual of robot's path
-        for k in range(len(room)-1,-1,-1):
-            for j in room[k]:
-                print (j,end = "")
-            print('\n')
-
-        # loop through each coordinate in path and change output back to 0 (prep room for next robot)
-        for j in path:
-            x = j[1]
-            y = j[0]
-            room[x][y] = 0
-
-        print('\n')
+    blue = (0,0,255)
+    red = (255,0,0)
+    green = (0,255,0)
+    yellow = (250,234,17)
+    white = (255,255,255)
+    margin = 5
+    clock = pygame.time.Clock()
+    length = 0
+    for path in r_path:
+        if len(path) > length:
+            length = len(path)
+    symbol = [blue,red,green,yellow]
+    for row in range(len(room)):
+        for column in range(len(room[row])):
+            pygame.draw.rect(screen, white, [(margin+10)*column+10,(margin+10)*row+margin,10,10])
+    clock.tick(60)
+    pygame.display.flip()
+    # loop through each coordinate of the path and change it's output for clear visual
+    while True:
+        for t in range(length):
+            s = 0
+            for r in range(len(robots_start)):
+                if t < len(r_path[r]):
+                    pygame.draw.rect(screen,symbol[s],[(margin+10)*r_path[r][t][0]+10,(margin+10)*(len(room)-r_path[r][t][1])+margin,10,10])
+                pygame.time.delay(40)
+                pygame.display.update()
+                s+=1
 
 # run the main function of the program
 main()
