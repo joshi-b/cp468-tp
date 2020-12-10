@@ -1,10 +1,10 @@
-
 import math
 
 # initialize arrays to hold blocked, open and closed coordinates(positions)
 opened = []
 closed = []
 r_path = []
+moves = []
 
 class location():
 
@@ -100,6 +100,7 @@ def a_search(grid, start, point, one_opening):
     # initialize array to hold the robot's path
      path = []
      blocks = []
+     pause = 0
      i=0
 
      # initialize location of start position and rendezvous point
@@ -120,11 +121,13 @@ def a_search(grid, start, point, one_opening):
         # if current position is rendezvous point, return path of the robot
         if(x.location == point):
             if len(closed) > 0:
+                moves.append(len(path)-pause)
                 r_path.append(path)
-                return path, r_path
+                return path, r_path, moves
             else:
+                moves.append(len(path)-pause)
                 r_path.append(path)
-                return [x], r_path
+                return [x], r_path, moves
         
         # determine available moves for current position
         avail_moves, new_block = x.gen_avail_moves(grid, goal, blocks)
@@ -133,7 +136,7 @@ def a_search(grid, start, point, one_opening):
             x = x.prev
             path.pop(-1)
             if closed == []:
-                return [], r_path
+                return [], r_path, moves
             opened.append(x)
             closed.remove(x)
             continue
@@ -143,6 +146,7 @@ def a_search(grid, start, point, one_opening):
                     if p[i] in avail_moves and p[i]!=(point[0],point[1]):
                          avail_moves.pop(avail_moves.index(p[i]))
             if avail_moves == []:
+                pause+=1
                 new_location = location(x,x.location)
                 opened.append(new_location)
                 c = opened[at_open]
@@ -205,4 +209,4 @@ def a_search(grid, start, point, one_opening):
             path.append((new_location.location[1], new_location.location[0]))
             i+=1
      r_path.append(path)
-     return [x.location], r_path
+     return [x.location], r_path, moves
