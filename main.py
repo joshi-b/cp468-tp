@@ -1,7 +1,7 @@
 from A_star_algorithm import a_search
 import pygame
 import os
-
+import time
 
 def main():
 
@@ -109,6 +109,7 @@ def main():
         print('not an option')
         return
     
+    start_time = time.time()
     running = True
     Text = False
     size = 0
@@ -160,7 +161,9 @@ def main():
                 continue
             # print out the path output for the robot
             print(path)
+            print("--- Time for Robot " +str(robot_num) + " run in seconds: %s  ---" % (time.time() - start_time))
             print('\n')
+        print("--- Total run in seconds: %s  ---" % (time.time() - start_time))
         blue = (0,0,255)
         red = (255,0,0)
         green = (0,255,0)
@@ -281,6 +284,8 @@ def main():
         print('\n')
         print("Please find results in "+ os.path.dirname(os.path.abspath("output.txt"))+"\output.txt")
         print('\n')
+        
+    
 
 # run the main function of the program
 main()
