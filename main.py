@@ -251,6 +251,7 @@ def main():
                         break
                     else:
                         f.write(str(path[i:i+50]))
+            print(path)
             f.write('\n')
             # loop through each row of the room and output it with the changes made above for clear visual of robot's path
             for k in range(len(room)-1,-1,-1):
