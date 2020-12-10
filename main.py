@@ -4,7 +4,7 @@ import os
 import time
 
 def main():
-
+    print('\n')
     # initialize variables to hold room dimensions and an array to hold room details
     rows = 0
     columns = 0
@@ -24,8 +24,11 @@ def main():
     # if input type is file, extract details from the file
     if input_type == "file":
         file_name = input("Enter filename: ")
+        if not os.path.exists(file_name):
+            print("File not Found")
+            return
         file = open(file_name,"r")
-
+        
         # initialize variable to keep track of what line we are at in the file
         line_number = 0
 
@@ -111,63 +114,102 @@ def main():
     start_time = time.time()
     total = 0
     complete = False
-    text = False
     size = 0
     # initialize a variable to hold which robot's path we are determining
     robot_num = 0
-    if len(room) > 500:
-        text = True
-    elif len(room) >= 100 and len(room) < 500:
+    if len(room) >= 100 and len(room) <= 500:
         size = 4
-        text = True
     elif len(room) >= 50 and len(room) < 100:
         size = 10
     elif len(room) >= 20 and len(room) <50:
         size = 25
     elif len(room) > 0 and len(room) < 20:
         size = 50
+    elif len(room) > 500:
+        size = 0
     else:
         print("invalid size")
-        return
+    print("Putting results in a file")
+    # initialize a variable to hold which robot's path we are determining
+    robot_num = 0
+    if os.path.exists("output.txt"):
+        os.remove("output.txt")
+    f = open("output.txt","x")
+    # print out rendezvous point of this room
+    f.write("Rendezvous Point: " + "(" + str(goal[1]) + "," + str(goal[0]) + ")\n\n")
+    print(("Rendezvous Point: " + "(" + str(goal[1]) + "," + str(goal[0]) + ")\n"))
+    # for each robot, determine it's path and output it
+    for i in robots_start:
+
+        # initialize an array to hold robot's path and increment robot number
+        path = []
+        robot_num+=1
+
+        # check if robot start position is an obstacle, if it is, let user know
+        if room[i[0]][i[1]] == 1:
+            f.write("Robot can not be at an obstacle\n\n")
+            print("Robot can not be at an obstacle\n")
+            path = [(i[1],i[0])]
+        # check if rendezvous point is an obstacle, if it is, ler user know
+        elif room[goal[0]][goal[1]] == 1:
+            f.write("Rendezvous point is at an obstacle\n\n")
+            print("\nRendezvous point is at an obstacle\n")
+            return
+        # if robot and rendezvous point not an obstacle, determine robot's path
+        else:
+            f.write("\nRobot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:\n\n")
+            print("Robot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:\n")
+            # perform a star search algorithm to determine robot's path
+            path, r_path, moves = a_search(room,i,goal,one_opening)
+
+        # if path output empty, let user know
+        if path == []:
+            f.write("No path for the robot to take\n\n")
+            print("No path for the robot to take\n")
+            continue
+
+        # loop through each coordinate of the path and change it's output for clear visual
+        for j in path:
+
+            # determine coordinates
+            x = j[1]
+            y = j[0]
+            # if coordinates are the last step of the path (meaning the rendezvous point), change its output to X
+            if j == path[-1]:
+                room[x][y] = "X"
+            # if coordinates are the first step of the path (meaning the start position), change its output to ^
+            elif j == path[0]:
+                room[x][y] = "^"
+            # for any other steps in the path, change its output to -
+            else:
+                room[x][y] = "-"
+        f.write(str(path)+'\n\n')
+        print(str(path) + '\n')
+        f.write("--- Time for Robot " +str(robot_num) + " run in seconds: %s ---\n\n" % (time.time() - start_time))
+        print("--- Time for Robot " +str(robot_num) + " run in seconds: %s ---\n" % (time.time() - start_time))
+        f.write("--- Number of steps taken by Robot " +str(robot_num) +": " + str(moves[-1]) + " ---\n\n")
+        print("--- Number of steps taken by Robot " +str(robot_num) +": " + str(moves[-1]) + " ---\n")
+        total = total + (time.time() - start_time)
+        # loop through each row of the room and output it with the changes made above for clear visual of robot's path
+        for k in range(len(room)-1,-1,-1):
+            line = ''
+            for j in room[k]:
+                line+=str(j)
+            f.write(line)
+            f.write('\n')
+
+        # loop through each coordinate in path and change output back to 0 (prep room for next robot)
+        for j in path:
+            x = j[1]
+            y = j[0]
+            room[x][y] = 0
     
+    f.write("--- Time for Robots in total in seconds: %s ---\n\n" % total)
+    print("--- Time for Robots in total in seconds: %s ---\n" % total)
+    print("Please find results in "+ os.path.dirname(os.path.abspath("output.txt"))+"\output.txt after you close the program\n")
+
     # print out rendezvous point of this room
     if size > 0:
-        print("\nRendezvous Point: " + "(" + str(goal[1]) + "," + str(goal[0]) + ")")
-        # for each robot, determine it's path and output it
-        a = 50
-        for i in robots_start:
-
-            # initialize an array to hold robot's path and increment robot number
-            path = []
-            robot_num+=1
-
-            # check if robot start position is an obstacle, if it is, let user know
-            if room[i[0]][i[1]] == 1:
-                print("Robot can not be at an obstacle")
-                path = [(i[1],i[0])]
-            # check if rendezvous point is an obstacle, if it is, ler user know
-            elif room[goal[0]][goal[1]] == 1:
-                print("Rendezvous point is at an obstacle")
-                return
-            # if robot and rendezvous point not an obstacle, determine robot's path
-            else:
-                print("Robot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:")
-                # perform a star search algorithm to determine robot's path
-                path, r_path, moves = a_search(room,i,goal,one_opening)
-
-            # if path output empty, let user know
-            if path == []:
-                print("No path for the robot to take")
-                continue
-            # print out the path output for the robot
-            print(path)
-            print('\n')
-            print("--- Time for Robot " +str(robot_num) + " run in seconds: %s ---" % (time.time() - start_time))
-            print("--- Number of steps taken by Robot " +str(robot_num) +": " + str(moves[-1]) + " ---")
-            total = total + (time.time() - start_time)
-            print('\n')
-        
-        print("--- Total run in seconds: %s ---" % total)
         blue = (0,0,255)
         red = (255,0,0)
         green = (0,255,0)
@@ -176,8 +218,8 @@ def main():
         gray = (128,128,128)
         purple = (153,51,255)
         margin = 5
-        print('\n')
         print('-----------------------------------------')
+        print("LEGEND FOR ANIMATION:")
         print(" Green square is the rendezvous point")
         print(" Robot 1 is blue")
         print(" Robot 2 is red")
@@ -194,7 +236,9 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     complete = True
-            pygame.display.update()
+                    break
+            if complete:
+                break
             for path in r_path:
                 if len(path) > length:
                     length = len(path)
@@ -207,10 +251,15 @@ def main():
                         pygame.draw.rect(screen, green, [(margin+size)*(column)+size,(margin+size)*(len(room)-row)+margin,size,size])
                     else:
                         pygame.draw.rect(screen, gray, [(margin+size)*(column)+size,(margin+size)*(len(room)-row)+margin,size,size])
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    complete = True
+                    break
+            if complete:
+                break
             clock.tick(60)
             pygame.display.flip()
             # loop through each coordinate of the path and change it's output for clear visual
-    
             for t in range(length):
                 s = 0
                 for r in range(len(robots_start)):
@@ -220,92 +269,18 @@ def main():
                         pygame.time.delay(40)
                     else:
                         pygame.time.delay(20)
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            complete = True
+                            break
+                    if complete:
+                        break
                     pygame.display.update()
                     s+=1
+        pygame.display.quit()
         pygame.quit()
-        
-    if text:
-        print("Putting results in a file")
-        # initialize a variable to hold which robot's path we are determining
-        robot_num = 0
-        if os.path.exists("output.txt"):
-            os.remove("output.txt")
-        f = open("output.txt","x")
-        # print out rendezvous point of this room
-        f.write("\nRendezvous Point: " + "(" + str(goal[1]) + "," + str(goal[0]) + ")\n")
-
-        # for each robot, determine it's path and output it
-        for i in robots_start:
-
-            # initialize an array to hold robot's path and increment robot number
-            path = []
-            robot_num+=1
-
-            # check if robot start position is an obstacle, if it is, let user know
-            if room[i[0]][i[1]] == 1:
-                f.write("Robot can not be at an obstacle\n")
-                path = [(i[1],i[0])]
-            # check if rendezvous point is an obstacle, if it is, ler user know
-            elif room[goal[0]][goal[1]] == 1:
-                f.write("Rendezvous point is at an obstacle\n")
-                return
-            # if robot and rendezvous point not an obstacle, determine robot's path
-            else:
-                f.write("Robot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:")
-                # perform a star search algorithm to determine robot's path
-                path, r_path = a_search(room,i,goal,one_opening)
-
-            # if path output empty, let user know
-            if path == []:
-                print("No path for the robot to take")
-                continue
-
-            # loop through each coordinate of the path and change it's output for clear visual
-            for j in path:
-
-                # determine coordinates
-                x = j[1]
-                y = j[0]
-                # if coordinates are the last step of the path (meaning the rendezvous point), change its output to X
-                if j == path[-1]:
-                    room[x][y] = "X"
-                # if coordinates are the first step of the path (meaning the start position), change its output to ^
-                elif j == path[0]:
-                    room[x][y] = "^"
-                # for any other steps in the path, change its output to -
-                else:
-                    room[x][y] = "-"
-            print('\n')
-            print(("Robot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:\n"))
-            print(path)
-            # print out the path output for the robot
-            if len(path) > 50:
-                split = len(path)/50
-                for p in range(0,len(path),50):
-                    if p+100 > len(path):
-                        f.write(str(path[p:50-p])+'\n')
-                        break
-                    else:
-                        f.write(str(path[p:p+50])+'\n')
-            
-            f.write('\n')
-            # loop through each row of the room and output it with the changes made above for clear visual of robot's path
-            for k in range(len(room)-1,-1,-1):
-                line = ''
-                for j in room[k]:
-                    line+=str(j)
-                f.write(line)
-                f.write('\n')
-
-            # loop through each coordinate in path and change output back to 0 (prep room for next robot)
-            for j in path:
-                x = j[1]
-                y = j[0]
-                room[x][y] = 0
-
-            f.write('\n')
-        print('\n')
-        print("Please find results in "+ os.path.dirname(os.path.abspath("output.txt"))+"\output.txt")
+    else:
+        print(" The room is too big for the animation. Please view results in the output file")
         print('\n')
 
 # run the main function of the program
