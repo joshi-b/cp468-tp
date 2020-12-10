@@ -1,5 +1,5 @@
 from A_star_algorithm import a_search
-import pygame
+import pygame, sys
 import os
 import time
 
@@ -108,10 +108,10 @@ def main():
     else:
         print('not an option')
         return
-    
     start_time = time.time()
-    running = True
-    Text = False
+    total = 0
+    complete = False
+    text = False
     size = 0
     # initialize a variable to hold which robot's path we are determining
     robot_num = 0
@@ -153,7 +153,7 @@ def main():
             else:
                 print("Robot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:")
                 # perform a star search algorithm to determine robot's path
-                path, r_path = a_search(room,i,goal,one_opening)
+                path, r_path, moves = a_search(room,i,goal,one_opening)
 
             # if path output empty, let user know
             if path == []:
@@ -161,30 +161,50 @@ def main():
                 continue
             # print out the path output for the robot
             print(path)
-            print("--- Time for Robot " +str(robot_num) + " run in seconds: %s  ---" % (time.time() - start_time))
             print('\n')
-        print("--- Total run in seconds: %s  ---" % (time.time() - start_time))
+            print("--- Time for Robot " +str(robot_num) + " run in seconds: %s ---" % (time.time() - start_time))
+            print("--- Number of steps taken by Robot " +str(robot_num) +": " + str(moves[-1]) + " ---")
+            total = total + (time.time() - start_time)
+            print('\n')
+        
+        print("--- Total run in seconds: %s ---" % total)
         blue = (0,0,255)
         red = (255,0,0)
         green = (0,255,0)
         yellow = (250,234,17)
         white = (255,255,255)
         gray = (128,128,128)
+        purple = (153,51,255)
         margin = 5
+        print('\n')
+        print('-----------------------------------------')
+        print(" Green square is the rendezvous point")
+        print(" Robot 1 is blue")
+        print(" Robot 2 is red")
+        print(" Robot 3 is purple")
+        print(" Robot 4 is yellow")
+        print('-----------------------------------------')
+        print('\n')
         pygame.init()
         screen = pygame.display.set_mode((1000,1000),0,32)
         pygame.display.set_caption('Path_Planning Group 4')
         clock = pygame.time.Clock()
         length = 0
-        while running:   
+        while not complete:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    complete = True
+            pygame.display.update()
             for path in r_path:
                 if len(path) > length:
                     length = len(path)
-            symbol = [blue,red,green,yellow]
+            symbol = [blue,red,purple,yellow]
             for row in range(len(room)-1,-1,-1):
                 for column in range(len(room[row])):
                     if room[row][column] == 1:
                         pygame.draw.rect(screen, white, [(margin+size)*(column)+size,(margin+size)*(len(room)-row)+margin,size,size])
+                    elif row == goal[0] and column == goal[1]:
+                        pygame.draw.rect(screen, green, [(margin+size)*(column)+size,(margin+size)*(len(room)-row)+margin,size,size])
                     else:
                         pygame.draw.rect(screen, gray, [(margin+size)*(column)+size,(margin+size)*(len(room)-row)+margin,size,size])
             clock.tick(60)
@@ -196,11 +216,16 @@ def main():
                 for r in range(len(robots_start)):
                     if t < len(r_path[r]):
                         pygame.draw.rect(screen,symbol[s],[(margin+size)*r_path[r][t][0]+size,(margin+size)*(len(room)-r_path[r][t][1])+margin,size,size])
-                    pygame.time.delay(30)
+                    if size > 5:
+                        pygame.time.delay(40)
+                    else:
+                        pygame.time.delay(20)
                     pygame.display.update()
                     s+=1
+        pygame.quit()
         
     if text:
+        print("Putting results in a file")
         # initialize a variable to hold which robot's path we are determining
         robot_num = 0
         if os.path.exists("output.txt"):
@@ -234,8 +259,6 @@ def main():
             if path == []:
                 print("No path for the robot to take")
                 continue
-
-           
 
             # loop through each coordinate of the path and change it's output for clear visual
             for j in path:
@@ -284,8 +307,6 @@ def main():
         print('\n')
         print("Please find results in "+ os.path.dirname(os.path.abspath("output.txt"))+"\output.txt")
         print('\n')
-        
-    
 
 # run the main function of the program
 main()
