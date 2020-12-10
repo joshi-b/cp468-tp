@@ -143,7 +143,7 @@ def a_search(grid, start, point, one_opening):
                     if p[i] in avail_moves and p[i]!=(point[0],point[1]):
                          avail_moves.pop(avail_moves.index(p[i]))
             if avail_moves == []:
-                new_location = location(x,x)
+                new_location = location(x,x.location)
                 opened.append(new_location)
                 c = opened[at_open]
                 new_location.g_n = new_location.prev.g_n + 1
