@@ -1,6 +1,6 @@
 import math
 
-# initialize arrays to hold blocked, open and closed coordinates(positions)
+# initialize arrays to hold blocked, open and closed coordinates(positions), pathes, and move count
 opened = []
 closed = []
 r_path = []
@@ -41,10 +41,12 @@ class location():
         Parameters:
         grid - array holding room details
         goal - coordinates of rendezvous point
+        blocked - list of dead ends or blocked spaces
 
         Returns:
         open_space - an array holding all open spaces (available moves)
                      around current position
+        blocked - updated blocked list
         ---------------------------------------------------------------
         """ 
         # initialize array to hold available moves (open spaces)
@@ -176,7 +178,7 @@ def a_search(grid, start, point, one_opening):
                 if c.location == shift:
                     in_close = True
                     continue
-            # calculate the h value for the available move
+            # calculate the h value for the available moves
             for o in range(len(one_opening)-1,-1,-1):
                 if shift[0] <= (len(grid)-one_opening[o]):
                     goal.location = ((len(grid)-one_opening[o]),grid[(len(grid)-one_opening[o])-1].index(0))
@@ -210,5 +212,6 @@ def a_search(grid, start, point, one_opening):
             new_location.f_n = new_location.g_n + new_location.h_n
             path.append((new_location.location[1], new_location.location[0]))
             i+=1
+     # return the results of the algorithm (paths and moves)
      r_path.append(path)
      return [x.location], r_path, moves
