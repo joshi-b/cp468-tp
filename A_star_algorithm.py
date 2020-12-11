@@ -145,6 +145,8 @@ def a_search(grid, start, point, one_opening):
                 if p!=[] and i < len(p):
                     if p[i] in avail_moves and p[i]!=(point[0],point[1]):
                          avail_moves.pop(avail_moves.index(p[i]))
+
+            # calculate the g, h and f values for this position
             if avail_moves == []:
                 pause+=1
                 new_location = location(x,x.location)

@@ -34,7 +34,7 @@ def main():
 
         # loop through each line in the file
         for i in file:
-            # chcek if  the line has a new line character at the end, remove character if it does
+            # check if  the line has a new line character at the end, remove character if it does
             if i[:-1] == '\n':
                 line = i[:-1]
             else:
@@ -66,9 +66,11 @@ def main():
                 for character in line:
                     if character != '\n':
                         temp_row.append(int(character))
+                    # keep track of how many open spaces available in row
                     if character!='\n' and int(character) == 0:
                         count+=1
                 room.insert(0,temp_row)
+                # if only 1 open space is available in a row, add to array to keeo track of it
                 if count == 1:
                     one_opening.append(line_number-robot_numbers-2)
             # increment line number of file
@@ -97,9 +99,11 @@ def main():
                 count=0
                 for m in row:
                     temp.append(int(m))
+                    # keep track of how many open spaces available in row
                     if m == 0:
                         count+=1
                 room.insert(0,temp)
+                # if only 1 open space is available in a row, add to array to keeo track of it
                 if count == 1:
                     one_opening.append(n)
             print('\n')
@@ -111,12 +115,14 @@ def main():
     else:
         print('not an option')
         return
+
+    # initialize variables to keep track of the time, completion status and room size
     start_time = time.time()
     total = 0
     complete = False
     size = 0
-    # initialize a variable to hold which robot's path we are determining
-    robot_num = 0
+
+    # determine size according to room for visually outputing the grid
     if len(room) >= 100 and len(room) <= 500:
         size = 4
     elif len(room) >= 50 and len(room) < 100:
@@ -130,6 +136,7 @@ def main():
     else:
         print("invalid size")
     print("Putting results in a file")
+
     # initialize a variable to hold which robot's path we are determining
     robot_num = 0
     if os.path.exists("output.txt"):
@@ -183,13 +190,22 @@ def main():
             # for any other steps in the path, change its output to -
             else:
                 room[x][y] = "-"
+
+        # ouput the robot's path to terminal and file
         f.write(str(path)+'\n\n')
         print(str(path) + '\n')
+
+        # output the robot's time to terminal and file
         f.write("--- Time for Robot " +str(robot_num) + " run in seconds: %s ---\n\n" % (time.time() - start_time))
         print("--- Time for Robot " +str(robot_num) + " run in seconds: %s ---\n" % (time.time() - start_time))
+
+        # ouput the robot's step count to terminal and file
         f.write("--- Number of steps taken by Robot " +str(robot_num) +": " + str(moves[-1]) + " ---\n\n")
         print("--- Number of steps taken by Robot " +str(robot_num) +": " + str(moves[-1]) + " ---\n")
+
+        # add robot's time to total overall time
         total = total + (time.time() - start_time)
+
         # loop through each row of the room and output it with the changes made above for clear visual of robot's path
         for k in range(len(room)-1,-1,-1):
             line = ''
@@ -204,12 +220,17 @@ def main():
             y = j[0]
             room[x][y] = 0
     
+    # ouput total time to terminal and file
     f.write("--- Time for Robots in total in seconds: %s ---\n\n" % total)
     print("--- Time for Robots in total in seconds: %s ---\n" % total)
+
+    # output the file path to terminal
     print("Please find results in "+ os.path.dirname(os.path.abspath("output.txt"))+"\output.txt after you close the program\n")
 
-    # print out rendezvous point of this room
+    # if room size is feasible to animate
     if size > 0:
+
+        # initialize colours
         blue = (0,0,255)
         red = (255,0,0)
         green = (0,255,0)
@@ -218,6 +239,8 @@ def main():
         gray = (128,128,128)
         purple = (153,51,255)
         margin = 5
+
+        # print out the legend for the animation
         print('-----------------------------------------')
         print("LEGEND FOR ANIMATION:")
         print(" Green square is the rendezvous point")
@@ -227,11 +250,15 @@ def main():
         print(" Robot 4 is yellow")
         print('-----------------------------------------')
         print('\n')
+
+        # start animation
         pygame.init()
         screen = pygame.display.set_mode((1000,1000),0,32)
         pygame.display.set_caption('Path_Planning Group 4')
         clock = pygame.time.Clock()
         length = 0
+
+        # while path of robot not complete
         while not complete:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -243,6 +270,8 @@ def main():
                 if len(path) > length:
                     length = len(path)
             symbol = [blue,red,purple,yellow]
+
+            # add obstacles and open spaces to visual
             for row in range(len(room)-1,-1,-1):
                 for column in range(len(room[row])):
                     if room[row][column] == 1:
@@ -251,6 +280,8 @@ def main():
                         pygame.draw.rect(screen, green, [(margin+size)*(column)+size,(margin+size)*(len(room)-row)+margin,size,size])
                     else:
                         pygame.draw.rect(screen, gray, [(margin+size)*(column)+size,(margin+size)*(len(room)-row)+margin,size,size])
+           
+            # close window
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     complete = True
@@ -259,16 +290,24 @@ def main():
                 break
             clock.tick(60)
             pygame.display.flip()
-            # loop through each coordinate of the path and change it's output for clear visual
+
+            # loop through each step
             for t in range(length):
                 s = 0
+                # loop though each robot
                 for r in range(len(robots_start)):
+
+                    # for each robot, make the visual change for next step
                     if t < len(r_path[r]):
                         pygame.draw.rect(screen,symbol[s],[(margin+size)*r_path[r][t][0]+size,(margin+size)*(len(room)-r_path[r][t][1])+margin,size,size])
+                    
+                    # delay visual change for ease of viewing
                     if size > 5:
                         pygame.time.delay(40)
                     else:
                         pygame.time.delay(20)
+                    
+                    # close window
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             complete = True
@@ -280,6 +319,8 @@ def main():
         pygame.display.quit()
         pygame.quit()
     else:
+
+        # if animation not possible for room size, output info message
         print(" The room is too big for the animation. Please view results in the output file")
         print('\n')
 
