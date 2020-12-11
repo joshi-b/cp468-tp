@@ -16,7 +16,7 @@ class location():
         -------------------------------------------------------
         Parameters:
         prev - coordinates of the last position in the room
-        location - coordinates represeting current position 
+        location - coordinates representing current position 
                    in the room
         -------------------------------------------------------
         """
@@ -51,7 +51,7 @@ class location():
         """ 
         # initialize array to hold available moves (open spaces)
         open_space = []
-        # get coordinates of current positon
+        # get coordinates of current position
         row = self.location[0]
         column = self.location[1]
 
