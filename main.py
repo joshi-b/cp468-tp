@@ -34,7 +34,7 @@ def main():
 
         # loop through each line in the file
         for i in file:
-            # check if  the line has a new line character at the end, remove character if it does
+            # check if the line has a new line character at the end, remove character if it does
             if i[:-1] == '\n':
                 line = i[:-1]
             else:
@@ -70,7 +70,7 @@ def main():
                     if character!='\n' and int(character) == 0:
                         count+=1
                 room.insert(0,temp_row)
-                # if only 1 open space is available in a row, add to array to keeo track of it
+                # if only 1 open space is available in a row, add to array to keep track of it
                 if count == 1:
                     one_opening.append(line_number-robot_numbers-2)
             # increment line number of file
@@ -139,6 +139,7 @@ def main():
 
     # initialize a variable to hold which robot's path we are determining
     robot_num = 0
+    # check if there is an existing output.txt file
     if os.path.exists("output.txt"):
         os.remove("output.txt")
     f = open("output.txt","x")
@@ -157,7 +158,7 @@ def main():
             f.write("Robot can not be at an obstacle\n\n")
             print("Robot can not be at an obstacle\n")
             path = [(i[1],i[0])]
-        # check if rendezvous point is an obstacle, if it is, ler user know
+        # check if rendezvous point is an obstacle, if it is, let user know
         elif room[goal[0]][goal[1]] == 1:
             f.write("Rendezvous point is at an obstacle\n\n")
             print("\nRendezvous point is at an obstacle\n")
@@ -166,7 +167,7 @@ def main():
         else:
             f.write("\nRobot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:\n\n")
             print("Robot " + str(robot_num) + " at " + "(" + str(i[1]) + "," + str(i[0]) + ")" + " takes the path:\n")
-            # perform a star search algorithm to determine robot's path
+            # perform a* search algorithm to determine robot's path
             path, r_path, moves = a_search(room,i,goal,one_opening)
 
         # if path output empty, let user know
@@ -260,6 +261,7 @@ def main():
 
         # while path of robot not complete
         while not complete:
+            # if window is closed then close window
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     complete = True
@@ -281,7 +283,7 @@ def main():
                     else:
                         pygame.draw.rect(screen, gray, [(margin+size)*(column)+size,(margin+size)*(len(room)-row)+margin,size,size])
            
-            # close window
+            # if window is closed then close window
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     complete = True
@@ -303,11 +305,11 @@ def main():
                     
                     # delay visual change for ease of viewing
                     if size > 5:
-                        pygame.time.delay(40)
-                    else:
                         pygame.time.delay(20)
+                    else:
+                        pygame.time.delay(40)
                     
-                    # close window
+                    # if window is closed then close window
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             complete = True
