@@ -53,7 +53,7 @@ def main():
                 x = int(info[1])
                 y = int(info[0])
                 robots_start.append((x,y))
-            # if at the line after robot coordinates are done, extract rendezvous coordinates and save in varaiable
+            # if at the line after robot coordinates are done, extract rendezvous coordinates and save in variable
             elif line_number == robot_numbers + 1:
                 info = line.split(" ")
                 x = int(info[1])
@@ -103,7 +103,7 @@ def main():
                     if m == 0:
                         count+=1
                 room.insert(0,temp)
-                # if only 1 open space is available in a row, add to array to keeo track of it
+                # if only 1 open space is available in a row, add to array to keep track of it
                 if count == 1:
                     one_opening.append(n)
             print('\n')
@@ -122,7 +122,7 @@ def main():
     complete = False
     size = 0
 
-    # determine size according to room for visually outputing the grid
+    # determine size according to room for visually outputting the grid
     if len(room) >= 100 and len(room) <= 500:
         size = 4
     elif len(room) >= 50 and len(room) < 100:
@@ -192,7 +192,7 @@ def main():
             else:
                 room[x][y] = "-"
 
-        # ouput the robot's path to terminal and file
+        # output the robot's path to terminal and file
         f.write(str(path)+'\n\n')
         print(str(path) + '\n')
 
@@ -200,7 +200,7 @@ def main():
         f.write("--- Time for Robot " +str(robot_num) + " run in seconds: %s ---\n\n" % (time.time() - start_time))
         print("--- Time for Robot " +str(robot_num) + " run in seconds: %s ---\n" % (time.time() - start_time))
 
-        # ouput the robot's step count to terminal and file
+        # output the robot's step count to terminal and file
         f.write("--- Number of steps taken by Robot " +str(robot_num) +": " + str(moves[-1]) + " ---\n\n")
         print("--- Number of steps taken by Robot " +str(robot_num) +": " + str(moves[-1]) + " ---\n")
 
@@ -221,7 +221,7 @@ def main():
             y = j[0]
             room[x][y] = 0
     
-    # ouput total time to terminal and file
+    # output total time to terminal and file
     f.write("--- Time for Robots in total in seconds: %s ---\n\n" % total)
     print("--- Time for Robots in total in seconds: %s ---\n" % total)
 
@@ -296,7 +296,7 @@ def main():
             # loop through each step
             for t in range(length):
                 s = 0
-                # loop though each robot
+                # loop through each robot
                 for r in range(len(robots_start)):
 
                     # for each robot, make the visual change for next step
