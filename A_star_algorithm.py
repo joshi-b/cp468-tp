@@ -94,12 +94,39 @@ class location():
 
 #calculate the h value - gets the distance between the goal and current location
 def heuristic(neighbor, goal):
+    """
+    -------------------------------------------------------
+    Find the heuristic value of the move
+    -------------------------------------------------------
+    Parameters:
+    neighbor - possible next move
+    goal - rendezvous point
+
+    Returns:
+    distance - heuristic value of the neighbor
+    -------------------------------------------------------
+    """
     distance = math.sqrt(((goal.location[0]-neighbor.location[0])**2)+((goal.location[1]-neighbor.location[1])**2))
     return distance
 
 def a_search(grid, start, point, one_opening):
-    
-    # initialize array to hold the robot's path
+     """
+     -------------------------------------------------------
+     A* search algorithm
+     -------------------------------------------------------
+     Parameters:
+     grid - the room in a 2-D array
+     start - start position of the robot
+     point - the rendezvous point
+     one_opening - list of rows with limited openings
+
+     Returns:
+     path - path of robot
+     r_path - path of all robots
+     moves - moves taken by all robots
+     -------------------------------------------------------
+     """
+     # initialize array to hold the robot's path
      path = []
      blocks = []
      pause = 0
