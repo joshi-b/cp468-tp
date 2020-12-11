@@ -305,9 +305,9 @@ def main():
                     
                     # delay visual change for ease of viewing
                     if size > 5:
-                        pygame.time.delay(20)
+                        pygame.time.delay(50)
                     else:
-                        pygame.time.delay(40)
+                        pygame.time.delay(20)
                     
                     # if window is closed then close window
                     for event in pygame.event.get():
